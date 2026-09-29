@@ -192,7 +192,7 @@ section{ position: relative; }
   background: rgba(22,17,12,0.98);
   overflow:hidden; max-height:0; transition: max-height .4s var(--ease-soft);
 }
-.nav-mobile.open{ max-height: 420px; }
+.nav-mobile.open{ max-height: 560px; }
 .nav-mobile a{
   padding: 1em 6vw; border-top: 1px solid var(--line-dark);
   font-size: .95rem; letter-spacing:.04em; text-transform:uppercase; font-weight:600;
@@ -730,4 +730,100 @@ section{ position: relative; }
    ================================================================ */
 a:focus-visible, button:focus-visible{
   outline: 2px solid var(--rose-gold); outline-offset: 3px; border-radius: 4px;
+}
+
+/* ================================================================
+   SHOP CATEGORY TABS (Hair Mist / Body Mist)
+   ================================================================ */
+.cat-tabs{
+  display: inline-flex; gap: 4px; padding: 5px;
+  margin: 0 auto 2.5rem;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(255,255,255,0.03);
+}
+.shop-inner{ text-align: center; }
+.cat-tab{
+  appearance: none; border: 0; cursor: pointer;
+  padding: .8em 2em; border-radius: 999px;
+  background: transparent; color: rgba(250,244,236,0.7);
+  font-family: var(--font-body); font-weight: 700; font-size: .8rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  transition: background .35s ease, color .35s ease, box-shadow .35s ease;
+}
+.cat-tab:hover{ color: var(--paper); }
+.cat-tab.active{
+  background: linear-gradient(135deg, var(--rose-gold-soft), var(--rose-gold));
+  color: #211611;
+  box-shadow: 0 8px 24px -10px rgba(196,138,110,0.7);
+}
+
+/* ================================================================
+   POLISH — headings were inheriting the body's 1.6 line-height
+   ================================================================ */
+h1, h2, h3{ line-height: 1.12; }
+.bm-body h3{ line-height: 1.2; }
+.shop h2, .switcher h2, .benefits h2, .gallery h2, .notes-section h2, .intro h2{ margin-bottom: .6em; }
+
+/* ================================================================
+   CATALOG GRID + PRODUCT CARDS (Hair Mist + Body Mist)
+   ================================================================ */
+.cat-tab{ white-space: nowrap; }
+.catalog-sub{ max-width: 52ch; margin: 0 auto 2.75rem; min-height: 3.2em; }
+.catalog-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 2vw, 1.75rem);
+  text-align: left;
+}
+.product-card{
+  --accent: #e8a9b8;
+  display: flex; flex-direction: column;
+  background: var(--stage-edge);
+  border: 1px solid var(--line-dark);
+  border-radius: 22px;
+  overflow: hidden;
+  opacity: 0; transform: translateY(32px);
+  transition: opacity .8s var(--ease-out-slow), transform .6s var(--ease-soft), box-shadow .5s var(--ease-soft), border-color .4s ease;
+}
+.product-card.in-view{ opacity: 1; transform: none; }
+.product-card.in-view:hover{
+  transform: translateY(-8px);
+  border-color: var(--accent);
+  box-shadow: 0 24px 50px -18px var(--accent);
+}
+@media (prefers-reduced-motion: reduce){ .product-card{ opacity: 1; transform: none; } }
+.pc-media{ position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--stage-deep); }
+.pc-media img{ width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out-slow); }
+.product-card:hover .pc-media img{ transform: scale(1.06); }
+.pc-badge{
+  position: absolute; top: 14px;
+  padding: .3em .8em; border-radius: 999px;
+  background: rgba(22,17,12,.72); backdrop-filter: blur(6px);
+  font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--paper);
+}
+.pc-cat{ left: 14px; }
+.pc-vol{ right: 14px; }
+.pc-body{ padding: 1.25rem 1.3rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
+.pc-tagline{ font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 .5em; }
+.pc-body h3{ font-size: 1.6rem; line-height: 1.2; margin: 0 0 .35em; }
+.pc-desc{ font-size: .92rem; line-height: 1.55; flex: 1; }
+.pc-price-row{ display: flex; align-items: baseline; gap: .6em; margin: .4rem 0 1rem; }
+.pc-price{ font-family: var(--font-display); font-size: 1.5rem; color: var(--paper); }
+.pc-was{ text-decoration: line-through; opacity: .5; font-size: .95rem; }
+.pc-off{ font-size: .72rem; font-weight: 800; padding: .2em .6em; border-radius: 999px; background: var(--accent); color: #211611; }
+.pc-actions{ display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; }
+.pc-actions .qty-control{ flex: 0 0 auto; }
+.pc-actions .btn{ flex: 1 1 100%; padding: .85em 1em; }
+@media (max-width: 1080px) and (min-width: 521px), (max-width: 520px){
+  /* wider cards: qty and button sit side by side */
+  .pc-actions .btn{ flex: 1 1 0; min-width: 0; }
+}
+
+@media (max-width: 1080px){ .catalog-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px){
+  .catalog-grid{ grid-template-columns: 1fr; }
+  .pc-media{ aspect-ratio: 4 / 5; }
+  .cat-tabs{ max-width: 100%; }
+  .cat-tab{ padding: .75em 1.05em; font-size: .7rem; letter-spacing: .08em; }
 }

@@ -1,22 +1,26 @@
-﻿/**
+/**
  * ============================================================
- * AYA MARHABA â€” PRODUCT DATA
+ * AYA MARHABA — CATALOG (categories + every product)
  * ============================================================
- * This is the ONLY place product info should be edited.
+ * This is the ONLY place categories and product info are edited.
+ * Every product belongs to exactly one category ("hair" or "body").
  * Every price, discount, description and note shown anywhere
  * on the site is pulled from this file at runtime.
  *
  * To change a price or discount, edit the numbers below and
- * refresh the page â€” nothing else needs to change.
+ * refresh the page — nothing else needs to change.
  * ============================================================
  */
 
 window.PRODUCTS = {
   rose: {
     key: "rose",
+    category: "hair",
+    volume: "50 ml",
+    photo: "images/products/rose.jpg",
     name: "Rose",
-    tagline: "Romantic Â· Elegant Â· Soft",
-    mood: "A soft bloom of Damask rose and pink peony, brushed over silkâ€‘smooth hair. Rose is the quiet confidence of getting ready slowly.",
+    tagline: "Romantic · Elegant · Soft",
+    mood: "A soft bloom of Damask rose and pink peony, brushed over silk‑smooth hair. Rose is the quiet confidence of getting ready slowly.",
     price: 10,
     discount: 0,
     currency: "$",
@@ -34,8 +38,11 @@ window.PRODUCTS = {
   },
   oud: {
     key: "oud",
+    category: "hair",
+    volume: "50 ml",
+    photo: "images/products/oud.jpg",
     name: "Oud",
-    tagline: "Deep Â· Warm Â· Luxurious",
+    tagline: "Deep · Warm · Luxurious",
     mood: "Aged oudh wood and warm resin, wrapped in amber smoke. Oud is for the days you want to be remembered after you've left the room.",
     price: 10,
     discount: 0,
@@ -54,9 +61,12 @@ window.PRODUCTS = {
   },
   fruity: {
     key: "fruity",
+    category: "hair",
+    volume: "50 ml",
+    photo: "images/products/fruity.jpg",
     name: "Fruity",
-    tagline: "Fresh Â· Juicy Â· Playful",
-    mood: "Sunâ€‘ripened orange, kiwi and wild berries splashed across freshly washed hair. Fruity is the scent of an open window in early summer.",
+    tagline: "Fresh · Juicy · Playful",
+    mood: "Sun‑ripened orange, kiwi and wild berries splashed across freshly washed hair. Fruity is the scent of an open window in early summer.",
     price: 10,
     discount: 0,
     currency: "$",
@@ -74,8 +84,11 @@ window.PRODUCTS = {
   },
   vanilla: {
     key: "vanilla",
+    category: "hair",
+    volume: "50 ml",
+    photo: "images/products/vanilla.jpg",
     name: "Vanilla",
-    tagline: "Creamy Â· Sweet Â· Addictive",
+    tagline: "Creamy · Sweet · Addictive",
     mood: "Whipped vanilla pod and warm silk protein, settling like a cashmere throw. Vanilla is comfort you can wear out the door.",
     price: 10,
     discount: 0,
@@ -91,21 +104,100 @@ window.PRODUCTS = {
     accentDeep: "#8c5a2b",
     tint: "#241a10",
     glyph: "vanilla"
+  },
+  /* ---------------- BODY MIST ---------------- */
+  body_rose: {
+    key: "body_rose",
+    category: "body",
+    volume: "150 ml",
+    name: "Rosé",
+    tagline: "Romantic · Blooming · Soft",
+    mood: "Dewy pink roses and a whisper of baby's breath, settled on soft, hydrated skin.",
+    price: 15,
+    discount: 0,
+    currency: "$",
+    photo: "images/bodymist/rose.jpg",
+    accent: "#e8a9b8"
+  },
+  body_fruity: {
+    key: "body_fruity",
+    category: "body",
+    volume: "150 ml",
+    name: "Fruity",
+    tagline: "Fresh · Juicy · Playful",
+    mood: "Orange, kiwi and wild berries with a cool touch of mint — sunshine in a bottle.",
+    price: 15,
+    discount: 0,
+    currency: "$",
+    photo: "images/bodymist/fruity.jpg",
+    accent: "#a8d86b"
+  },
+  body_marshmallow: {
+    key: "body_marshmallow",
+    category: "body",
+    volume: "150 ml",
+    name: "Marshmallow",
+    tagline: "Sweet · Cloudy · Cozy",
+    mood: "Soft, sugary marshmallow with clean musk — like wrapping yourself in a fresh white towel.",
+    price: 15,
+    discount: 0,
+    currency: "$",
+    photo: "images/bodymist/marshmallow.jpg",
+    accent: "#8ec5e8"
+  },
+  body_vanilla: {
+    key: "body_vanilla",
+    category: "body",
+    volume: "150 ml",
+    name: "Vanilla",
+    tagline: "Creamy · Warm · Addictive",
+    mood: "Vanilla orchid and pods, golden and creamy — comfort you can wear all day.",
+    price: 15,
+    discount: 0,
+    currency: "$",
+    photo: "images/bodymist/vanilla.jpg",
+    accent: "#e3b96e"
   }
 };
 
-window.PRODUCT_ORDER = ["rose", "oud", "fruity", "vanilla"];
 
-// Shared facts, printed on every bottle â€” used in Benefits section
+/* ------------------------------------------------------------
+   CATEGORIES — single source of truth. Order here = order shown
+   in the shop tabs and the navigation. "all" is a virtual view.
+   ------------------------------------------------------------ */
+window.CATEGORIES = [
+  { key: "all",  label: "All Products", blurb: "Every Aya Marhaba scent — two collections, one signature." },
+  { key: "hair", label: "Hair Mist",    blurb: "A fine mist of fragrance and care for your hair — alcohol‑free, with Vitamin E and silk protein. 50 ml." },
+  { key: "body", label: "Body Mist",    blurb: "Long‑lasting fragrance for soft, hydrated skin. 150 ml." }
+];
+
+// Display order of products (grouped by category, hair first)
+window.PRODUCT_ORDER = [
+  "rose", "oud", "fruity", "vanilla",
+  "body_rose", "body_fruity", "body_marshmallow", "body_vanilla"
+];
+
+// Products for a category key ("all" returns everything)
+window.getProductsByCategory = function (cat) {
+  return window.PRODUCT_ORDER.filter(function (k) {
+    return cat === "all" || window.PRODUCTS[k].category === cat;
+  });
+};
+window.getCategoryLabel = function (cat) {
+  var c = window.CATEGORIES.filter(function (x) { return x.key === cat; })[0];
+  return c ? c.label : cat;
+};
+
+// Shared facts, printed on every bottle — used in Benefits section
 window.BRAND_FACTS = {
   brand: "Aya Marhaba",
   line: "Hair Mist",
   volume: "50 ml",
   enrichedWith: ["Vitamin E", "Silk Protein", "UV Protection"],
-  claims: ["Alcoholâ€‘Free", "For All Hair Types", "Adds Shine & Freshness", "Longâ€‘Lasting Fragrance"]
+  claims: ["Alcohol‑Free", "For All Hair Types", "Adds Shine & Freshness", "Long‑Lasting Fragrance"]
 };
 
-// Helper â€” always compute price this way, never hardcode a final price.
+// Helper — always compute price this way, never hardcode a final price.
 window.getFinalPrice = function (key) {
   const p = window.PRODUCTS[key];
   const final = p.price * (1 - p.discount / 100);

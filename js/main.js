@@ -7,7 +7,7 @@
   "use strict";
 
   const PRODUCTS = window.PRODUCTS;
-  const ORDER = window.PRODUCT_ORDER;
+  const ORDER = window.getProductsByCategory("hair"); // story / scent-switcher sections are Hair Mist only
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const GLYPH_EMOJI = { rose: "🌹", oud: "🌿", fruity: "🍓", vanilla: "🍦" };
@@ -269,9 +269,7 @@
     });
   }
   const switcherTabs = document.getElementById("switcher-tabs");
-  const shopTabs = document.getElementById("shop-tabs");
   buildTabs(switcherTabs);
-  buildTabs(shopTabs);
 
   function syncTabs(container, key) {
     Array.from(container.children).forEach((btn) => {
@@ -282,7 +280,6 @@
   }
   onScentChange((p) => {
     syncTabs(switcherTabs, p.key);
-    syncTabs(shopTabs, p.key);
   });
 
   /* ---------------------------------------------------------------
@@ -337,54 +334,6 @@
   });
 
   /* ---------------------------------------------------------------
-     SHOP PANEL
-  --------------------------------------------------------------- */
-  const shopImage = document.getElementById("shop-image");
-  const shopGlow = document.getElementById("shop-glow");
-  const shopName = document.getElementById("shop-name");
-  const shopTagline = document.getElementById("shop-tagline");
-  const shopPriceFinal = document.getElementById("shop-price-final");
-  const shopPriceOriginal = document.getElementById("shop-price-original");
-  const shopDiscount = document.getElementById("shop-discount");
-  const shopPanel = document.querySelector(".shop-panel");
-  let qty = 1;
-  const qtyValue = document.getElementById("qty-value");
-
-  onScentChange((p) => {
-    shopPanel.style.setProperty("--accent", p.accent);
-    shopImage.style.opacity = 0;
-    setTimeout(() => {
-      shopImage.src = p.image;
-      shopImage.alt = "Aya Marhaba " + p.name + " Hair Mist";
-      shopImage.style.opacity = 1;
-    }, 180);
-    shopGlow.style.background = `radial-gradient(circle, ${p.accent}, transparent 70%)`;
-    shopName.textContent = p.name + " Hair Mist";
-    shopTagline.textContent = GLYPH_EMOJI[p.key] + "  " + p.tagline;
-    const finalPrice = window.getFinalPrice(p.key);
-    shopPriceFinal.textContent = money(finalPrice, p.currency);
-    shopPriceOriginal.textContent = p.discount > 0 ? money(p.price, p.currency) : "";
-    shopDiscount.textContent = p.discount > 0 ? "-" + p.discount + "%" : "";
-    shopDiscount.style.display = p.discount > 0 ? "" : "none";
-  });
-
-  document.getElementById("qty-minus").addEventListener("click", () => {
-    qty = Math.max(1, qty - 1);
-    qtyValue.textContent = qty;
-  });
-  document.getElementById("qty-plus").addEventListener("click", () => {
-    qty = Math.min(9, qty + 1);
-    qtyValue.textContent = qty;
-  });
-
-  const addToCartBtn = document.getElementById("add-to-cart");
-  addToCartBtn.addEventListener("click", () => {
-    const original = addToCartBtn.textContent;
-    addToCartBtn.textContent = "Added ✓";
-    setTimeout(() => (addToCartBtn.textContent = original), 1600);
-  });
-
-  /* ---------------------------------------------------------------
      "EXPLORE {SCENT}" links from story sections
   --------------------------------------------------------------- */
   document.querySelectorAll("[data-goto-scent]").forEach((link) => {
@@ -404,6 +353,110 @@
      INITIALIZE default scent
   --------------------------------------------------------------- */
   setScent("rose");
+
+
+  /* ---------------------------------------------------------------
+     CATALOG — category tabs + filtered product grid
+     Everything comes from window.CATEGORIES / window.PRODUCTS.
+  --------------------------------------------------------------- */
+  (function catalog() {
+    const tabsEl = document.getElementById("cat-tabs");
+    const grid = document.getElementById("catalog-grid");
+    const sub = document.getElementById("catalog-sub");
+    if (!tabsEl || !grid) return;
+
+    let current = "all";
+
+    // tabs
+    window.CATEGORIES.forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cat-tab";
+      btn.dataset.category = c.key;
+      btn.setAttribute("role", "tab");
+      btn.textContent = c.label;
+      btn.addEventListener("click", () => setCategory(c.key));
+      tabsEl.appendChild(btn);
+    });
+
+    function card(key) {
+      const p = PRODUCTS[key];
+      const final = window.getFinalPrice(key);
+      const el = document.createElement("article");
+      el.className = "product-card";
+      el.dataset.category = p.category;
+      el.style.setProperty("--accent", p.accent);
+      el.innerHTML = `
+        <div class="pc-media">
+          <img src="${p.photo}" alt="Aya Marhaba ${p.name} ${window.getCategoryLabel(p.category)}" loading="lazy" />
+          <span class="pc-badge pc-cat">${window.getCategoryLabel(p.category)}</span>
+          <span class="pc-badge pc-vol">${p.volume}</span>
+        </div>
+        <div class="pc-body">
+          <p class="pc-tagline">${p.tagline}</p>
+          <h3>${p.name}</h3>
+          <p class="pc-desc">${p.mood}</p>
+          <div class="pc-price-row">
+            <span class="pc-price">${money(final, p.currency)}</span>
+            ${p.discount > 0 ? `<span class="pc-was">${money(p.price, p.currency)}</span><span class="pc-off">-${p.discount}%</span>` : ""}
+          </div>
+          <div class="pc-actions">
+            <div class="qty-control" aria-label="Quantity">
+              <button type="button" class="pc-minus" aria-label="Decrease quantity">−</button>
+              <span class="pc-qty">1</span>
+              <button type="button" class="pc-plus" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="button" class="btn btn-primary pc-add">Add to Cart</button>
+          </div>
+        </div>`;
+      let qty = 1;
+      const qtyEl = el.querySelector(".pc-qty");
+      el.querySelector(".pc-minus").addEventListener("click", () => { qty = Math.max(1, qty - 1); qtyEl.textContent = qty; });
+      el.querySelector(".pc-plus").addEventListener("click", () => { qty = Math.min(9, qty + 1); qtyEl.textContent = qty; });
+      const add = el.querySelector(".pc-add");
+      add.addEventListener("click", () => {
+        const original = add.textContent;
+        add.textContent = "Added ✓";
+        setTimeout(() => (add.textContent = original), 1600);
+      });
+      return el;
+    }
+
+    let io3 = null;
+    function setCategory(cat) {
+      current = cat;
+      Array.from(tabsEl.children).forEach((t) => {
+        const on = t.dataset.category === cat;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", String(on));
+      });
+      const c = window.CATEGORIES.filter((x) => x.key === cat)[0];
+      sub.textContent = c ? c.blurb : "";
+      grid.innerHTML = "";
+      window.getProductsByCategory(cat).forEach((k) => grid.appendChild(card(k)));
+
+      // reveal each card on its own (tall single-column grids on phones)
+      const cards = grid.querySelectorAll(".product-card");
+      if (io3) io3.disconnect();
+      if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        cards.forEach((c2) => c2.classList.add("in-view"));
+      } else {
+        io3 = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add("in-view"); io3.unobserve(e.target); }
+          });
+        }, { threshold: 0.12 });
+        cards.forEach((c2) => io3.observe(c2));
+      }
+    }
+
+    // any link carrying data-category (nav, footer, CTAs) switches the shop view
+    document.querySelectorAll("a[data-category]").forEach((a) =>
+      a.addEventListener("click", () => setCategory(a.dataset.category))
+    );
+
+    setCategory("all");
+  })();
 
   /* ---------------------------------------------------------------
      GALLERY — render from data + lightbox

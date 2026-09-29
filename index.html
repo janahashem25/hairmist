@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aya Marhaba — Hair Mist | Discover Your Signature Scent</title>
+<title>Aya Marhaba — Hair Mist &amp; Body Mist | Discover Your Signature Scent</title>
 <meta name="description" content="Aya Marhaba Hair Mist — Rose, Oud, Fruity & Vanilla. Four fragrances, one unforgettable ritual." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/styles.css?v=20260929b" />
 </head>
 <body>
 
@@ -29,25 +29,26 @@
     <a href="#hero" class="nav-logo">Aya&nbsp;Marhaba</a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#hero">Home</a>
-      <a href="#switcher">Scents</a>
+      <a href="#shop" data-category="hair">Hair&nbsp;Mist</a>
+      <a href="#shop" data-category="body">Body&nbsp;Mist</a>
       <a href="#benefits">Benefits</a>
       <a href="#gallery">Gallery</a>
       <a href="#lifestyle">About</a>
-      <a href="#shop">Shop</a>
+      <a href="#shop" data-category="all">Shop&nbsp;All</a>
     </nav>
-    <a href="#shop" class="nav-cta">Shop&nbsp;Now</a>
+    <a href="#shop" data-category="all" class="nav-cta">Shop&nbsp;Now</a>
     <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
   <div class="nav-mobile" id="nav-mobile">
     <a href="#hero">Home</a>
-    <a href="#switcher">Scents</a>
+    <a href="#shop" data-category="hair">Hair Mist</a>
+    <a href="#shop" data-category="body">Body Mist</a>
     <a href="#benefits">Benefits</a>
     <a href="#gallery">Gallery</a>
     <a href="#lifestyle">About</a>
-    <a href="#shop">Shop</a>
-    <a href="#shop" class="nav-mobile-cta">Shop Now</a>
+    <a href="#shop" data-category="all" class="nav-mobile-cta">Shop All</a>
   </div>
 </header>
 
@@ -116,9 +117,9 @@
       </div>
 
       <div class="hero-copy" id="hero-copy">
-        <p class="eyebrow">Aya Marhaba · Hair Mist</p>
+        <p class="eyebrow">Aya Marhaba · Hair &amp; Body Mist</p>
         <h1>Discover Your<br/>Signature Scent</h1>
-        <p class="hero-sub">Four fragrances. One unforgettable experience.</p>
+        <p class="hero-sub">Hair mist and body mist. One unforgettable experience.</p>
         <a href="#intro" class="btn btn-primary" id="hero-cta">Explore the Scents</a>
       </div>
     </div>
@@ -216,7 +217,7 @@
 <!-- ============================================================ -->
 <section id="switcher" class="switcher">
   <div class="switcher-inner">
-    <p class="eyebrow" data-reveal="fade">Choose Your Mood</p>
+    <p class="eyebrow" data-reveal="fade">Hair Mist · Choose Your Mood</p>
     <h2 data-reveal="slide-up">Find the scent<br/>that feels like you.</h2>
 
     <div class="switcher-tabs" id="switcher-tabs" role="tablist" aria-label="Choose a fragrance"></div>
@@ -232,7 +233,7 @@
         <p id="switcher-mood"></p>
         <ul class="switcher-notes" id="switcher-notes"></ul>
         <div class="switcher-price" id="switcher-price"></div>
-        <a href="#shop" class="btn btn-primary" id="switcher-cta">Shop Now</a>
+        <a href="#shop" data-category="hair" class="btn btn-primary" id="switcher-cta">Shop Hair Mist</a>
       </div>
     </div>
   </div>
@@ -313,37 +314,10 @@
     <p class="eyebrow" data-reveal="fade">Shop the Collection</p>
     <h2 data-reveal="slide-up">Find the scent<br/>that feels like you.</h2>
 
-    <div class="shop-panel">
-      <div class="shop-media" data-reveal="scale">
-        <div class="shop-glow" id="shop-glow" aria-hidden="true"></div>
-        <img id="shop-image" src="" alt="" />
-      </div>
-
-      <div class="shop-details" data-reveal="slide-left">
-        <div class="shop-tabs" id="shop-tabs" role="tablist" aria-label="Choose a fragrance"></div>
-
-        <h3 id="shop-name"></h3>
-        <p class="shop-tagline" id="shop-tagline"></p>
-
-        <div class="shop-price-row">
-          <span class="shop-price-final" id="shop-price-final"></span>
-          <span class="shop-price-original" id="shop-price-original"></span>
-          <span class="shop-discount" id="shop-discount"></span>
-        </div>
-
-        <div class="shop-qty">
-          <span>Quantity</span>
-          <div class="qty-control">
-            <button type="button" id="qty-minus" aria-label="Decrease quantity">−</button>
-            <span id="qty-value">1</span>
-            <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-primary btn-block" id="add-to-cart">Add to Cart</button>
-        <p class="shop-note">50&nbsp;ml · Alcohol‑Free · Enriched with Vitamin E &amp; Silk Protein</p>
-      </div>
-    </div>
+    <!-- tabs are generated from window.CATEGORIES (js/data/products.js) -->
+    <div class="cat-tabs" id="cat-tabs" role="tablist" aria-label="Choose a category"></div>
+    <p class="catalog-sub" id="catalog-sub" aria-live="polite"></p>
+    <div class="catalog-grid" id="catalog-grid"></div>
   </div>
 </section>
 
@@ -371,9 +345,10 @@
     <span class="footer-logo">Aya&nbsp;Marhaba</span>
     <nav class="footer-links">
       <a href="#hero">Home</a>
-      <a href="#switcher">Scents</a>
+      <a href="#shop" data-category="hair">Hair Mist</a>
+      <a href="#shop" data-category="body">Body Mist</a>
       <a href="#gallery">Gallery</a>
-      <a href="#shop">Shop</a>
+      <a href="#shop" data-category="all">Shop All</a>
     </nav>
     <p class="footer-copy">© 2026 Aya Marhaba. All rights reserved.</p>
   </div>
@@ -388,8 +363,8 @@
   <p id="lightbox-caption"></p>
 </div>
 
-<script src="js/data/products.js"></script>
-<script src="js/data/gallery.js"></script>
-<script src="js/main.js"></script>
+<script src="js/data/products.js?v=20260929b"></script>
+<script src="js/data/gallery.js?v=20260929b"></script>
+<script src="js/main.js?v=20260929b"></script>
 </body>
 </html>
